@@ -90,3 +90,6 @@ docs/
 # Jetbrains config
 .idea/
 yarn-error.log
+
+# LowDB file
+db.json

@@ -11,6 +11,7 @@ import { logRequest } from './middleware/logRequest';
 
 // controllers
 import './controllers/PingController';
+import './controllers/TeacherController';
 
 export const api = express();
 
