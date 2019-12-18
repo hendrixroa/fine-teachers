@@ -11,6 +11,16 @@ import {
 } from 'typescript-rest';
 import { Tags } from 'typescript-rest-swagger';
 
+export interface TeacherResponse {
+  age: number;
+  name: string;
+  uuid: string;
+}
+
+export interface TeacherCreated {
+  uuid: string;
+}
+
 @Tags('Teachers')
 @Path('/teacher')
 @Security()
@@ -22,22 +32,27 @@ export class TeacherController {
    * @summary create teacher
    */
   @POST
-  public async create(payload: TeacherPayload): Promise<any> {
+  public async create(
+    payload: TeacherPayload,
+  ): Promise<SuccessResponse<TeacherCreated>> {
     const res = await this.context.request.container
       .resolve('teacherService')
       .createTeacher(payload);
-    return new SuccessResponse({ hi: 'Hello world' });
+    return new SuccessResponse({ uuid: res });
   }
 
   /**
-   * Get Teacher given an `id`
+   * Get Teacher given an `uuid`
    * @summary Obtain teacher
    */
-  @Path(':id')
+  @Path(':uuid')
   @GET
-  public async read(@PathParam('id') id: string): Promise<any> {
-    return {
-      name: 'Bob',
-    };
+  public async read(
+    @PathParam('uuid') uuid: string,
+  ): Promise<SuccessResponse<TeacherResponse>> {
+    const res = await this.context.request.container
+      .resolve('teacherService')
+      .getTeacher(uuid);
+    return new SuccessResponse(res);
   }
 }

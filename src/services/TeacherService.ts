@@ -1,4 +1,6 @@
+import { TeacherResponse } from '@/apps/api/controllers/TeacherController';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import * as uuid from 'uuid/v4';
 import { DatabaseService } from './DatabaseService';
 
 export class TeacherPayload {
@@ -12,10 +14,23 @@ export class TeacherPayload {
 }
 
 export class TeacherService {
-  constructor(private databaseService: DatabaseService) {}
+  private conn: any;
 
-  public async createTeacher(payload: TeacherPayload): Promise<boolean> {
-    this.databaseService.saveUser();
-    return true;
+  constructor(private databaseService: DatabaseService) {
+    this.conn = this.databaseService.getConnection();
+  }
+
+  public async createTeacher(payload: TeacherPayload): Promise<string> {
+    const id: string = uuid();
+    await this.conn
+      .get('teachers')
+      .push({ uuid: id, ...payload })
+      .write();
+    return id;
+  }
+
+  public async getTeacher(id: string): Promise<TeacherResponse> {
+    const teacher = await this.conn.get('teachers').find({ uuid: id });
+    return teacher;
   }
 }

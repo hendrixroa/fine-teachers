@@ -1,5 +1,5 @@
 {
   "watch": ["./", ".env", "api.env"],
-  "ignore": ["test/*", ".swagger/*"],
+  "ignore": ["test/*", ".swagger/*", "db.json"],
   "ext": "ts,env,yml,js,json"
 }

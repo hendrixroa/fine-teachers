@@ -1,5 +1,6 @@
 import { ContainerType } from '@/container';
 import { IsIn } from 'class-validator';
+import * as crypto from 'crypto';
 
 export function getEnumValues(Enum: any) {
   return Object.keys(Enum).map(key => Enum[key as keyof typeof Enum]);
@@ -15,6 +16,17 @@ export const sleep = (ms: number) => {
 
 export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const randomValue = (max: number, min: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const randomValueHex = (size: number) => {
+  return crypto
+    .randomBytes(Math.ceil(size / 2))
+    .toString('hex')
+    .slice(0, size);
 };
 
 export interface ClassConstructor {
