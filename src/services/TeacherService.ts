@@ -33,4 +33,23 @@ export class TeacherService {
     const teacher = await this.conn.get('teachers').find({ uuid: id });
     return teacher;
   }
+
+  public async updateTeacher(
+    id: string,
+    payload: TeacherPayload,
+  ): Promise<TeacherResponse> {
+    const teacher = await this.conn
+      .get('teachers')
+      .find({ uuid: id })
+      .assign({ ...payload })
+      .write();
+    return teacher;
+  }
+
+  public async deleteTeacher(id: string): Promise<void> {
+    await this.conn
+      .get('teachers')
+      .remove({ uuid: id })
+      .write();
+  }
 }

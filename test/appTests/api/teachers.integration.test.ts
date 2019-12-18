@@ -2,15 +2,7 @@ import { DatabaseService } from '@/services/DatabaseService';
 import { TeacherService } from '@/services/TeacherService';
 import { randomValue, randomValueHex } from '@/shared/helpers';
 import { expect } from 'chai';
-import * as fs from 'fs';
 import { agent } from '../../apiTestHelpers';
-
-// tslint:disable-next-line
-declare namespace Chai {
-  interface TypeComparison {
-    uuid: () => void;
-  }
-}
 
 const databaseService = new DatabaseService();
 const teacherService = new TeacherService(databaseService);
@@ -50,35 +42,28 @@ describe('Teachers CRUD', () => {
       });
   });
 
-  it('Should updates Teacher in DB', (done: (err?: any) => void) => {
-    // First create a teacher
-    const teacherToUpdate = {
-      age: 50,
-      name: 'Robert C Martin',
+  it('Should updates Teacher in DB', async () => {
+    const teacherIdToUpdate = await createTeacher();
+    const teacherPayloadToUpdate = {
+      age: randomValue(100, 1),
+      name: `NewTeacher${randomValueHex(4)}`,
     };
 
-    agent
-      .put('/teacher')
-      .send(teacherToUpdate)
-      .end((err: any, res: any) => {
-        if (err) {
-          return done(err);
-        }
+    return agent
+      .put(`/teacher/${teacherIdToUpdate}`)
+      .send(teacherPayloadToUpdate)
+      .then((res: any) => {
         expect(res.status).to.be.equal(200);
-        return done();
+        expect(teacherPayloadToUpdate.name).to.be.equal(res.body.data.name);
+        expect(teacherPayloadToUpdate.age).to.be.equal(res.body.data.age);
       });
   });
 
-  it('Should delete Teacher in DB', (done: (err?: any) => void) => {
-    // First create a teacher
-    const teacherIdToDelete = 1;
+  it('Should delete Teacher in DB', async () => {
+    const teacherIdToDelete = await createTeacher();
 
-    agent.delete(`/teacher/${teacherIdToDelete}`).end((err: any, res: any) => {
-      if (err) {
-        return done(err);
-      }
+    return agent.delete(`/teacher/${teacherIdToDelete}`).then((res: any) => {
       expect(res.status).to.be.equal(200);
-      return done();
     });
   });
 });
