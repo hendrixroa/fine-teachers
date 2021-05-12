@@ -29,7 +29,7 @@
   "dependencies": {
     "@hapi/joi": "^16.1.8",
     "@tsed/common": "^5.1.1",
-    "@tsed/core": "^5.1.1",
+    "@tsed/core": "^5.65.7",
     "@tsed/di": "^5.1.1",
     "@tsed/swagger": "^5.1.1",
     "@types/lowdb": "^1.0.9",
